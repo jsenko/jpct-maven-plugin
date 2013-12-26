@@ -7,8 +7,7 @@ import org.apache.maven.plugin.logging.Log;
 
 import java.io.File;
 import java.io.FileWriter;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 /**
  * Class that stores a per-job configuration so the user does not have to provide it again. Specifically, it it used to save
@@ -30,17 +29,54 @@ public class Config
 
     private Log log;
 
+
     /**
-     * Data dir is a directory for various temp files. Usually located in ${project.build.directory} If the dataDir cannot be
-     * created, throws IllegalStateException Arguments cannot be null.
+     * The Config class represents a per-job configuration.
+     * This method retrieves config for all jobs in the data directory.
+     * Unlike the constructor, this method requires that a data xml
+     * file is present in the directory.
+     * @return null on failure (e.g. dataDir is not  directory)
      */
-    public Config(File dataDir, String jobName, Log log)
+    public static List<Config> getConfigForAllJobs(File dataDir, Log log) {
+        Objects.requireNonNull(dataDir);
+        Objects.requireNonNull(log);
+        List<Config> result = new ArrayList<>();
+        File[] files = dataDir.listFiles();
+        log.debug(files.toString());
+        if(files == null) return null;
+        for(File file: files)
+            if(file.isDirectory() && new File(file, DATA_FILE_NAME).exists())
+                result.add(new Config(file, log));
+        return result;
+    }
+
+    /**
+     * Get a job configuration for a specified dataDir and job name.
+     * If the job dir does not exist, it is created. No verification.
+     * @throws IllegalArgumentException on IO error
+     */
+    public static Config getConfigByJobName(File dataDir, String jobName, Log log)
     {
-        jobDir = new File(dataDir, jobName);
+        File jobDir = new File(dataDir, jobName);
         if (!jobDir.exists() && !jobDir.mkdirs()) {
-            log.error("Data dir (" + jobDir + ") could not be created.");
-            throw new IllegalStateException();
+            throw new IllegalArgumentException("Job dir '" + jobDir + "' could not be created.");
         }
+        return new Config(jobDir, log);
+    }
+
+    /**
+     * Create configurator instance by directly providing job directory.
+     * Note that this succeeds for any directory because non-existing data files
+     * are automatically created. So verification that the directory has actually
+     * been created by the plugin, is not a task for this constructor.
+     * @throws IllegalArgumentException if the jobDir is not a directory
+     */
+    public Config(File jobDir, Log log)
+    {
+        if (!jobDir.isDirectory()) {
+            throw new IllegalArgumentException("File '" + jobDir + "' is not directory.");
+        }
+        this.jobDir = jobDir;
         this.log = log;
         data = load();
     }

@@ -168,7 +168,9 @@ public class RunMojo extends AbstractMojo
         if (jobName == null)
             jobName = generateJobName();
 
-        config = new Config(dataDir, jobName, log);
+        config = Config.getConfigByJobName(dataDir, jobName, log);
+        if(config == null)
+            fail("Could not get job config.");
 
         jenkinsClient = setupJenkins(jenkinsUrl, jenkinsUser, jenkinsToken);
 
