@@ -427,6 +427,10 @@ public class RunMojo extends AbstractMojo
                     + "Check that there exist at least one 'refs/remotes/" + gitRemoteName
                     + "/*' branch.");
 
+        if(base.equals(topicBranchRef.getObjectId()))
+            log.warn("The changes do not contain any commit. If -DincludeStaged is not used " +
+                             "(and something is actually staged) the build may fail!");
+
         if (!gitTools.createPatch(patchFile, base, topicBranchRef.getObjectId(), includeStaged))
             fail("Failed to generate a patch.");
 
