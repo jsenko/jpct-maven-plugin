@@ -197,6 +197,11 @@ public class RunMojo extends AbstractMojo
 
             if (job == null)
                 fail("Could not create Jenkins job '" + jobName + "'.");
+
+            // save job model hash code
+            log.info(configurator.getJobModel().toString());
+            config.put("jobModelHashCode", String.valueOf(configurator.getJobModel().hashCode()));
+            config.save();
         } else {
             if (!canReuse(configurator.getJobModel())) {
                 fail("The Jenkins job named '" + jobName
@@ -210,10 +215,6 @@ public class RunMojo extends AbstractMojo
                 log.info("Reusing existing Jenkins job.");
             }
         }
-
-        // save job model hash code
-        log.info(configurator.getJobModel().toString());
-        config.put("jobModelHashCode", String.valueOf(configurator.getJobModel().hashCode()));
 
         File patchFile = new File(config.getJobDir(), "patch");
         ensureFileExists(patchFile);
@@ -278,8 +279,8 @@ public class RunMojo extends AbstractMojo
             r.finish();
 
         if (build.isSuccess()) {
-            config.save();
             log.info("Build SUCCESS!");
+            config.save();
         } else {
             fail("Build FAILURE (" + build.getResult() + ")");
         }
