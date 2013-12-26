@@ -31,6 +31,7 @@ public class MavenJobModelConverter extends AbstractConverter
         tag("rootPOM", jm.getPomPath());
         tag("aggregatorStyleBuild", "true");
         tag("goals", jm.getGoals());
+        tag("description", jm.getDescription());
         
         // runAfterIf
         if(jm.getRunAfterIf() != null)
