@@ -68,7 +68,8 @@ Job configuration is stored in several classes in `net.jsenko.jpct.configurator.
 </configuration>
 </plugin>
 ```
-
+Execute following command:
+`mvn net.jsenko.jpct:jpct-maven-plugin:1.0-SNAPSHOT:run -DjenkinsUrl='http://localhost:8080' -DjobName=custom-job`
 If we look at the jenkins console output, the shell command has been executed.
 Note that the model may change in futue and additional configuration options will be added.
 
