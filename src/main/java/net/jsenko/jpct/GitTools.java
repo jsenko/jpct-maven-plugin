@@ -110,7 +110,7 @@ public class GitTools
         return p;
     }
 
-    public Set<Ref> getAllBranches() {
+    private Set<Ref> getAllBranches() {
         try {
             return new HashSet<>(git.branchList().setListMode(ALL).call());
         } catch (GitAPIException e) {
