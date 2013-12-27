@@ -154,7 +154,7 @@ public class GitTools
      * 
      * @return null on failure
      */
-    public ObjectId findBase(ObjectId start, Set<ObjectId> others)
+    private ObjectId findBase(ObjectId start, Set<ObjectId> others)
     {
         /*
          * commits in the start branch may load in multiple chunks in future because the branches should be relatively short
