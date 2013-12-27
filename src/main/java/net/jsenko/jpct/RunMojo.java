@@ -201,7 +201,6 @@ public class RunMojo extends AbstractMojo
                 fail("Could not create Jenkins job '" + jobName + "'.");
 
             // save job model hash code
-            log.info(configurator.getJobModel().toString());
             config.put("jobModelHashCode", String.valueOf(configurator.getJobModel().hashCode()));
             config.save();
         } else {
