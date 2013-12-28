@@ -22,6 +22,7 @@ import net.jsenko.jpct.jenkins.client.JenkinsClient;
 import net.jsenko.jpct.jenkins.client.Job;
 import net.jsenko.jpct.jenkins.client.impl.JenkinsClientFactory;
 import net.jsenko.jpct.result.ConsoleOutputFileRP;
+import net.jsenko.jpct.result.ProgressRP;
 import net.jsenko.jpct.result.ResultProcessor;
 import net.jsenko.jpct.result.TestSummaryRP;
 import org.apache.maven.plugin.AbstractMojo;
@@ -259,11 +260,12 @@ public class RunMojo extends AbstractMojo
         log.info("Build started.");
 
         final List<ResultProcessor> resultProcessors = new ArrayList<>();
+        resultProcessors.add(new ProgressRP());
         resultProcessors.add(new TestSummaryRP());
         resultProcessors.add(new ConsoleOutputFileRP());
 
         for (ResultProcessor r : resultProcessors)
-            r.start(log, build, config.getJobDir());
+            r.start(build, config, log);
 
         do {
             try {

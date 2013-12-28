@@ -1,5 +1,11 @@
 package net.jsenko.jpct.result;
 
+import net.jsenko.jpct.Config;
+import net.jsenko.jpct.jenkins.client.Build;
+import org.apache.maven.plugin.logging.Log;
+
+import java.io.File;
+
 /**
  * Print a character periodically until the build is finished.
  * 
@@ -7,11 +13,8 @@ package net.jsenko.jpct.result;
  */
 public class ProgressRP extends ResultProcessor
 {
-
+    @Override
     public void run() {
-        System.out.println('.');
-    }
-
-    public void finish() {
+        System.out.print('.');
     }
 }

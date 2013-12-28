@@ -1,9 +1,8 @@
 package net.jsenko.jpct.result;
 
+import net.jsenko.jpct.Config;
 import net.jsenko.jpct.jenkins.client.Build;
 import org.apache.maven.plugin.logging.Log;
-
-import java.io.File;
 
 /**
  * This interface is implemented by classes that process build results.
@@ -17,25 +16,25 @@ public abstract class ResultProcessor
 
     protected Build build;
 
-    protected File jobConfigDir;
+    protected Config config;
 
     /**
      * This method is called once when the build starts.
      */
-    public void start(Log log, Build build, File jobConfigDir)
+    public void start(Build build, Config config, Log log)
     {
-        this.log = log;
         this.build = build;
-        this.jobConfigDir = jobConfigDir;
+        this.config = config;
+        this.log = log;
     }
 
     /**
      * This method is repeatedly called while the job is building. Interval length is defined as a constant in RunMojo
      */
-    public abstract void run();
+    public void run() {};
 
     /**
      * This method is called once when building of the job finishes. It is always called, regardless of build result.
      */
-    public abstract void finish();
+    public void finish() {};
 }
