@@ -18,7 +18,6 @@ public class ParameterModelConverter extends AbstractConverter
     @Override
     public boolean canConvert(Class clazz)
     {
-        System.out.println(clazz.getGenericInterfaces());
         return ArrayList.class.equals(clazz) || LinkedList.class.equals(clazz);
     }
     
