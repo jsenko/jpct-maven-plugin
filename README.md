@@ -22,7 +22,7 @@ Just check out the code and run `mvn install`
 
 #### Basic example
 To run `mvn test -Dfoo` on Jenkins, execute:
-`mvn net.jsenko.jpct:jpct-maven-plugin:1.0-SNAPSHOT:run -DjenkinsUrl='http://localhost:8080' -Dgoals='test -Dfoo'`
+`mvn net.jsenko.jpct:jpct-maven-plugin:1.0:run -DjenkinsUrl='http://localhost:8080' -Dgoals='test -Dfoo'`
 Notes:
  - The url and goals are automatically saved so you just need to provide them once per job
  - Many properties have default values, for example it is expected that you are currently on the branch that conains the     changes (`-DtopicBranch=HEAD`), the remote name is `origin` and the job name will be same as the branch name.
@@ -52,7 +52,7 @@ Job configuration is stored in several classes in `net.jsenko.jpct.configurator.
 <plugin>
 <groupId>net.jsenko.jpct</groupId>
 <artifactId>jpct-maven-plugin</artifactId>
-<version>1.0-SNAPSHOT</version>
+<version>1.0</version>
 <configuration>
     <jobs>
         <job>
@@ -69,7 +69,7 @@ Job configuration is stored in several classes in `net.jsenko.jpct.configurator.
 </plugin>
 ```
 Execute following command:
-`mvn net.jsenko.jpct:jpct-maven-plugin:1.0-SNAPSHOT:run -DjenkinsUrl='http://localhost:8080' -DjobName=custom-job`
+`mvn net.jsenko.jpct:jpct-maven-plugin:1.0:run -DjenkinsUrl='http://localhost:8080' -DjobName=custom-job`
 If we look at the jenkins console output, the shell command has been executed (before maven test goal).
 Note that the model may change in futue and additional configuration options will be added.
 
