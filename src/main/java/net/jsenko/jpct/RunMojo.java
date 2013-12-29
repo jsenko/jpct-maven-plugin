@@ -282,10 +282,10 @@ public class RunMojo extends AbstractMojo
             r.finish();
 
         if (build.isSuccess()) {
-            log.info("Build SUCCESS!");
+            log.info("JENKINS BUILD SUCCESS!");
             config.save();
         } else {
-            fail("Build FAILURE (" + build.getResult() + ")");
+            fail("JENKINS BUILD FAILURE (" + build.getResult() + ")");
         }
     }
 
