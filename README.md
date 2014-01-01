@@ -4,7 +4,7 @@ Jenkins pre-commit test maven plugin
 Test your local code on Jenkins before pushing it to a remote git repository. The work is offloaded to the Jenkins server so the build is not using resources of your machine. You can start tests using this maven plugin and continue working. After the results are available, the plugin will present them to you and if the build is successful, you can confidently push the tested code to the remote repository. The plugin performs all the necessary work, including job configuration and transfer of the local changes. This works by transfering only the difference between the local branch and the remote branch, so no large amount of data is transfered and the tool is very efficient.
 
 #### Prerequisites:
- - Jenkins server with sufficient access rights (create and run jobs)
+ - Jenkins server with sufficient access rights (create and run jobs), tested with the 1.544 version
  - Your project must use Maven
  - The code is stored in a git repository. The local repository was cloned from some remote, and Jenkins must have access
    to pull from this remote repository.
