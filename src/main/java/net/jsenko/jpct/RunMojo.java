@@ -224,7 +224,7 @@ public class RunMojo extends AbstractMojo
 
         String nonce = generateNonce(10);
 
-        log.info("Running the job.");
+        log.info("Running the job (" + job.getURI() + ").");
 
         boolean result = job.getRunBuilder()
                 .setParameter("commitID", patchCommitId)
@@ -257,7 +257,7 @@ public class RunMojo extends AbstractMojo
         } while (build == null);
         System.out.println();
 
-        log.info("Build started.");
+        log.info("Build started (" + build.getURI() + ").");
 
         final List<ResultProcessor> resultProcessors = new ArrayList<>();
         resultProcessors.add(new ProgressRP());
