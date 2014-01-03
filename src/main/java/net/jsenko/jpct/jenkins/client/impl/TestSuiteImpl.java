@@ -3,12 +3,15 @@ package net.jsenko.jpct.jenkins.client.impl;
 import net.jsenko.jpct.jenkins.client.TestCase;
 import net.jsenko.jpct.jenkins.client.TestSuite;
 
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
 import java.util.List;
 
 /**
  * @author Jakub Senko
  */
+@XmlAccessorType(XmlAccessType.FIELD)
 public class TestSuiteImpl implements TestSuite
 {
     private Double duration;

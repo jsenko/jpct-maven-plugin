@@ -52,6 +52,7 @@ public class ModuleImpl extends AbstractResource implements Module
         TestReportImpl result = null;
         String input = response.getEntity(String.class);
         input = stripNonValidXMLCharacters(input);
+
         Reader reader = new StringReader(input);
         try {
             JAXBContext jaxbContext = JAXBContext.newInstance(TestReportImpl.class);

@@ -2,9 +2,13 @@ package net.jsenko.jpct.jenkins.client.impl;
 
 import net.jsenko.jpct.jenkins.client.TestCase;
 
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
+
 /**
  * @author Jakub Senko
  */
+@XmlAccessorType(XmlAccessType.FIELD)
 public class TestCaseImpl implements TestCase
 {
     private Double duration;
