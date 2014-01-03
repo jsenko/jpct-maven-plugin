@@ -1,9 +1,7 @@
 package net.jsenko.jpct.result;
 
 import net.jsenko.jpct.Config;
-import net.jsenko.jpct.jenkins.client.Build;
-import net.jsenko.jpct.jenkins.client.Module;
-import net.jsenko.jpct.jenkins.client.TestReport;
+import net.jsenko.jpct.jenkins.client.*;
 import org.apache.maven.plugin.logging.Log;
 
 import java.util.List;
@@ -35,11 +33,22 @@ public class TestSummaryRP extends ResultProcessor
         }
         for (Module module : modules) {
             TestReport report = module.getTestReport();
+
             System.out.println("Module " + module.getGroupId() + ':' + module.getArtifactId()
-                    + " (" + report.getDuration() + " s)");
-            System.out.println("  Test Passed: " + report.getPassCount() + ", Failures: "
-                    + report.getFailCount()
-                    + ", Skipped: " + report.getSkipCount());
+                             + " (" + report.getDuration() + " sec)");
+            System.out.println("  Test Passed: " + report.getPassCount()
+                             + ", Failures: " + report.getFailCount()
+                             + ", Skipped: " + report.getSkipCount());
+
+            if(report.getFailCount() > 0 || report.getSkipCount() > 0) {
+                System.out.println("    Problematic test cases:");
+                for(TestSuite testSuite: module.getTestReport().getTestSuites())
+                    for(TestCase testCase: testSuite.getTestCases())
+                        if(!"PASSED".equals(testCase.getStatus()))
+                            System.out.println("    " + testCase.getClassName()
+                                    + " " + testCase.getName()
+                                    + " (" + testCase.getStatus() + ")");
+            }
         }
     }
 }
