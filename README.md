@@ -32,7 +32,7 @@ Although the plugin has a `help` goal, here we provide short table with all prop
 
 Property | Description | Default value
 --- | --- | ---
-jenkinsUrl | Url of the Jenkins instance on which the jobs will be executed. This property is saved per job name so it does not have to be specified again. | null
+jenkinsUrl | Url of the Jenkins instance on which the jobs will be executed. This property is saved per job name so it does not have to be specified again. | `<ciManagement>` tag from pom.xml is used if possible
 jenkinsUser, jenkinsToken | In case the Jenkins instance requires authentication | null
 jobName | This is an unique job identifier. Name of the jenkins job. | current branch name
 goals | Maven goals and options to be executed. | `test`
