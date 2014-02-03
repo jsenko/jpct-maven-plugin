@@ -341,19 +341,23 @@ public class RunMojo extends AbstractMojo
         String savedUser = config.get("jenkinsUser");
         String savedToken = config.get("jenkinsToken");
         if (url == null) {
-            if(ciManagement != null
+            if(savedUrl != null) {
+                url = savedUrl;
+            } else {
+                // try to use <ciManagement>
+                if(ciManagement != null
                     && Pattern.matches(CI_MANAGEMENT_SYSTEM_NAME_PATTERN, ciManagement.getSystem())
                     && ciManagement.getUrl() != null)
-            {
-                url = ciManagement.getUrl();
-                log.info("Using Jenkins URL from <ciManagement> settings in POM.");
-            } else {
-                if(ciManagement != null) {
-                    log.warn("<ciManagement> settings found in POM but could not be used "
-                       + "because the system name does not match '"+ CI_MANAGEMENT_SYSTEM_NAME_PATTERN +"' pattern "
-                       + "or the URL is not set.");
+                {
+                    url = ciManagement.getUrl();
+                    log.info("Using Jenkins URL from <ciManagement> settings in POM.");
+                } else {
+                    if(ciManagement != null) {
+                        log.warn("<ciManagement> settings found in POM but could not be used "
+                               + "because the CI system name does not match '"+ CI_MANAGEMENT_SYSTEM_NAME_PATTERN +"' "
+                               + "pattern or the URL is not set.");
+                    }
                 }
-                url = savedUrl;
             }
         }
         if (user == null)
