@@ -221,9 +221,13 @@ public class RunMojo extends AbstractMojo
                         + "' already exists on Jenkins, but it cannot be reused, "
                         + "because we cannot verify that it was created by this plugin "
                         + "or its configuration has not changed.\n"
-                        + "To try to reuse the job anyway, use '-DforceJobReuse'.\n"
-                        + "Note that this does not guard against changes via other means" +
-                        " (e.g. web interface).");
+                        + "To solve this problem, try one of the following:\n"
+                        + "* Use different job name e.g. -DjobName=foo\n"
+                        + "* Use '-DforceJobReuse' to override "
+                        + "(this may cause errors if the job configurations are incompatible).\n"
+                        + "* If the job was created using this plugin and is no longer needed, "
+                        + "run this plugin's 'clean' goal to delete old jobs.\n"
+                        + "* Delete the job manually via Jenkins web interface.");
             } else {
                 log.info("Reusing existing Jenkins job.");
             }
