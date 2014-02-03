@@ -25,11 +25,13 @@ import net.jsenko.jpct.result.ConsoleOutputFileRP;
 import net.jsenko.jpct.result.ProgressRP;
 import net.jsenko.jpct.result.ResultProcessor;
 import net.jsenko.jpct.result.TestSummaryRP;
+import org.apache.maven.model.CiManagement;
 import org.apache.maven.plugin.AbstractMojo;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.logging.Log;
 import org.apache.maven.plugins.annotations.Mojo;
 import org.apache.maven.plugins.annotations.Parameter;
+import org.apache.maven.project.MavenProject;
 import org.eclipse.jgit.lib.ObjectId;
 import org.eclipse.jgit.lib.Ref;
 
@@ -38,6 +40,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
+import java.util.regex.Pattern;
 
 /**
  * Main Mojo of the Jenkins pre-commit test Maven plugin.
@@ -140,6 +143,14 @@ public class RunMojo extends AbstractMojo
     @Parameter(defaultValue = "4000", required = true)
     private Integer buildCheckInterval;
 
+    /**
+     * Get the project object that may contain CI information.
+     */
+    @Parameter(property = "project", required = true, readonly = true)
+    private MavenProject project;
+
+    private final String CI_MANAGEMENT_SYSTEM_NAME_PATTERN = "[Jj]enkins";
+
     private GitTools gitTools;
 
     private JenkinsClient jenkinsClient;
@@ -173,7 +184,7 @@ public class RunMojo extends AbstractMojo
         if(config == null)
             fail("Could not get job config.");
 
-        jenkinsClient = setupJenkins(jenkinsUrl, jenkinsUser, jenkinsToken);
+        jenkinsClient = setupJenkins(jenkinsUrl, jenkinsUser, jenkinsToken, project.getCiManagement());
 
         log.info("Using job name: '" + jobName + "'.");
         Job job = jenkinsClient.getJobByName(jobName);
@@ -319,23 +330,39 @@ public class RunMojo extends AbstractMojo
      * 
      * @return null on failure
      */
-    private JenkinsClient setupJenkins(String url, String user, String token)
+    private JenkinsClient setupJenkins(String url, String user, String token, CiManagement ciManagement)
             throws MojoExecutionException
     {
         String savedUrl = config.get("jenkinsUrl");
         String savedUser = config.get("jenkinsUser");
         String savedToken = config.get("jenkinsToken");
-        if (url == null)
-            url = savedUrl;
+        if (url == null) {
+            if(ciManagement != null
+                    && Pattern.matches(CI_MANAGEMENT_SYSTEM_NAME_PATTERN, ciManagement.getSystem())
+                    && ciManagement.getUrl() != null)
+            {
+                url = ciManagement.getUrl();
+                log.info("Using Jenkins URL from <ciManagement> settings in POM.");
+            } else {
+                if(ciManagement != null) {
+                    log.warn("<ciManagement> settings found in POM but could not be used "
+                       + "because the system name does not match '"+ CI_MANAGEMENT_SYSTEM_NAME_PATTERN +"' pattern "
+                       + "or the URL is not set.");
+                }
+                url = savedUrl;
+            }
+        }
         if (user == null)
             user = savedUser;
         if (token == null)
             token = savedToken;
 
         if (url == null)
-            fail("Jenkins URL (jenkinsUrl) is null and there is no saved value" +
-                    " from previous executions. This is a required parameter. " +
-                    "URL must point to the root of the server.");
+            fail("Jenkins URL is a required parameter:\n"
+               + "* 'jenkinsUrl' parameter is null.\n"
+               + "* There is no suitable <ciManagement> setting in POM.\n"
+               + "* There is no saved URL from previous executions.\n"
+               + "URL must point to the root of the server.");
 
         // this is to avoid problems when connecting via https
         System.setProperty("jsse.enableSNIExtension", "false");
